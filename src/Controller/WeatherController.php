@@ -7,9 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-use App\Repository\MeasurementRepository;
+//use App\Repository\MeasurementRepository;
 use App\Entity\Location;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use App\Service\WeatherUtil;
 
 
 class WeatherController extends AbstractController
@@ -18,10 +19,10 @@ class WeatherController extends AbstractController
     public function city(
         #[MapEntity(mapping: ['country' => 'country', 'city' => 'city'])]
         Location $location,
-        MeasurementRepository $repository,
+        WeatherUtil $util,
     ): Response
     {
-        $measurements = $repository->findByLocation($location);
+        $measurements = $util->getWeatherForLocation($location);
 
         return $this->render('weather/city.html.twig', [
             'location' => $location,
